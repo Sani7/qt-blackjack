@@ -94,7 +94,6 @@ playWindow::playWindow(QWidget *parent) : QMainWindow(parent),
     connect(ui->playagainButton, &QPushButton::clicked, this, [=]{reset();});
 
     turnCount = 0;
-    computerTurnCount = 0;
     player_wins = 0;
     computer_wins = 0;
 }
@@ -143,6 +142,7 @@ void playWindow::computerTurn(void)
     QPixmap lose(":/images/lose.png");
     QPixmap draw(":/images/draw.png");
 
+    turnCount = 0;
     while (dealer->getHandValue() < 16){
         dealer->addCard(deck->drawCard());
         QPixmap img = QPixmap(":/images/cards/" + cardToImg[dealer->getLastCard()] + ".png");
@@ -150,9 +150,9 @@ void playWindow::computerTurn(void)
 
         ui->computerScoreLabel->setText("Computer: " + QString::number(dealer->getHandValue()));
 
-        countToDealerLabel[computerTurnCount]->setPixmap(img);
+        countToDealerLabel[turnCount]->setPixmap(img);
 
-        computerTurnCount++;
+        turnCount++;
     }
 
     //if computer is bust
@@ -189,7 +189,6 @@ void playWindow::reset(void)
 
     //Clear Labels and Variables
     turnCount = 0;
-    computerTurnCount = 0;
 
     ui->playertotalLabel->setText("Total: " + QString::number(0));
 

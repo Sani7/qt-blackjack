@@ -53,7 +53,6 @@ private:
     std::unique_ptr<Player> dealer;
     std::unique_ptr<Player> player;
     uint8_t turnCount;
-    uint8_t computerTurnCount;
     int player_wins;
     int computer_wins;
 };
