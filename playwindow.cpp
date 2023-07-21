@@ -119,6 +119,7 @@ void playWindow::playerTurn(void)
     {
         ui->statusLabel->setText("Bust!");
         ui->twistButton->setEnabled(false);
+        ui->stickButton->setEnabled(false);
 
         // Generating Computer score
         computerTurn();
@@ -175,7 +176,8 @@ void playWindow::computerTurn(void)
         ui->outcomeLabel->setPixmap(win);
         player_wins++;
     }
-    ui->statusbar->showMessage("Player " + QString::number(player_wins) + " - Gamescore - " + "Computer " + QString::number(computer_wins));
+
+    ui->statusbar->showMessage("Gamescore Player: " + QString::number(player_wins) + " - " + "Computer: " + QString::number(computer_wins) + " - Win Percentage: " + QString::number(static_cast<double>(player_wins) / static_cast<double>(player_wins + computer_wins) * 100) + "%");
     this->setEnabled(true);
 }
 
