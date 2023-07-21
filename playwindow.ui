@@ -772,7 +772,7 @@ border-image:url(:/images/blackjack_table.png) 0 0 0 0 stretch stretch;
          </palette>
         </property>
         <property name="text">
-         <string>Computer:</string>
+         <string>Computer: 0</string>
         </property>
        </widget>
       </item>
