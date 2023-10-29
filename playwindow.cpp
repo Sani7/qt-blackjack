@@ -145,7 +145,7 @@ void playWindow::computerTurn(void)
     QPixmap draw(":/images/draw.png");
 
     turnCount = 0;
-    while (dealer->getHandValue() < 16){
+    while (dealer->getHandValue() < 18){
         dealer->addCard(deck->drawCard());
         QPixmap img = QPixmap(":/images/cards/" + cardToImg[dealer->getLastCard()] + ".png");
         img = img.scaled(ui->card10Label->size().width(), ui->card10Label->size().height(), Qt::KeepAspectRatio);
