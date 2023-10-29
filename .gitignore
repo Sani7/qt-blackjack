@@ -30,3 +30,5 @@
 *.exe
 *.out
 *.app
+
+build-Desktop_Qt_6_5_1_GCC_64bit-Debug/
