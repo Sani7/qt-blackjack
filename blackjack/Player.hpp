@@ -14,7 +14,7 @@ public:
 
     Card getLastCard(void) const;
     int getHandValue() const;
-    std::string getHandString() const;
+    std::string handToString() const;
 
 private:
     std::vector<std::unique_ptr<Card>> hand_;

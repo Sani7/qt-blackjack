@@ -37,7 +37,7 @@ int Player::getHandValue() const
     return value;
 }
 
-std::string Player::getHandString() const
+std::string Player::handToString() const
 {
     std::string handString;
     for (const auto &card : hand_)
