@@ -83,7 +83,6 @@ playWindow::playWindow(QWidget *parent) : QMainWindow(parent),
             {
         // To prevent users from activating function before the function ending.
         this->setEnabled(false);
-        ui->statusLabel->setText("Stick");
         ui->playagainButton->setEnabled(true);
         ui->twistButton->setEnabled(false);
         ui->stickButton->setEnabled(false);
@@ -118,7 +117,6 @@ void playWindow::playerTurn(void)
     // if player bust
     if (player->getHandValue() > 21)
     {
-        ui->statusLabel->setText("Bust!");
         ui->twistButton->setEnabled(false);
         ui->stickButton->setEnabled(false);
 
@@ -157,23 +155,20 @@ void playWindow::computerTurn(void)
         turnCount++;
     }
 
-    //if computer is bust
-    ui->computerStatusLabel->setText(dealer->getHandValue() > 21 ? "Bust!" : "Stick");
-
-    // if same score or both bust
-    if ((dealer->getHandValue() == player->getHandValue()) || ((dealer->getHandValue() > 21) && (player->getHandValue() > 21))){
-        ui->outcomeLabel->setPixmap(draw);
-    }
-    // if both players are not bust AND computer is larger than player
-    else if (
-            ((dealer->getHandValue() < 22) && (player->getHandValue() < 22)
-              && (dealer->getHandValue() > player->getHandValue()))
-            || ((player->getHandValue() > 21) && dealer->getHandValue() < 22 )){
+    int8_t winner = calculate_winner(player.get(), dealer.get());
+    if (winner < 0)
+    {
         ui->outcomeLabel->setPixmap(lose);;
         computer_wins++;
     }
-    // else, player wins
-    else{
+
+    if (winner == 0)
+    {
+        ui->outcomeLabel->setPixmap(draw);
+    }
+
+    if (winner > 0)
+    {
         ui->outcomeLabel->setPixmap(win);
         player_wins++;
     }
@@ -199,8 +194,6 @@ void playWindow::reset(void)
     ui->playagainButton->setEnabled(false);
     ui->stickButton->setEnabled(false);
     ui->outcomeLabel->clear();
-    ui->computerStatusLabel->setText("");
-    ui->statusLabel->setText("");
     ui->computerScoreLabel->setText("Computer: " + QString::number(0));
 
     // Clear Cards from player table
@@ -224,6 +217,36 @@ void playWindow::reset(void)
     ui->card3Label_2->clear();
     ui->card2Label_2->clear();
     ui->card1Label_2->clear();
+}
+
+int8_t playWindow::calculate_winner(Player* player, Player* dealer)
+{
+    // if dealer and player lose, dealer wins
+    if (dealer->getHandValue() > 21 && player->getHandValue() > 21)
+    {
+        return -1;
+    }
+
+    // if same score, draw
+    if (dealer->getHandValue() == player->getHandValue()){
+        return 0;
+    }
+
+    // if dealer went bust, player wins
+    if (dealer->getHandValue() > 21)
+    {
+        return 1;
+    }
+
+    // if player went bust, dealer wins
+    if (player->getHandValue() > 21)
+    {
+        return -1;
+    }
+
+    // player and dealer both have less then 21
+    // hence compare the values
+    return player->getHandValue() > dealer->getHandValue() ? 1 : -1;
 }
 
 playWindow::~playWindow()

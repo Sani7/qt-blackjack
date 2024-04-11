@@ -42,6 +42,7 @@ public:
     void playerTurn(void);
     void computerTurn(void);
     void reset(void);
+    int8_t calculate_winner(Player* player, Player* dealer);
 private:
     Ui::playWindow *ui;
 
