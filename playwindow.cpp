@@ -6,64 +6,69 @@
 playWindow::playWindow(QWidget *parent) : QMainWindow(parent),
       ui(new Ui::playWindow),
       standarPalette{qApp->palette()},
-      darkPalette{}
+      darkPalette{},
+      cardToImg{
+          {Card(Card::Rank::ACE, Card::Suit::CLUBS),      "AC"},
+          {Card(Card::Rank::TWO, Card::Suit::CLUBS),      "2C"},
+          {Card(Card::Rank::THREE, Card::Suit::CLUBS),    "3C"},
+          {Card(Card::Rank::FOUR, Card::Suit::CLUBS),     "4C"},
+          {Card(Card::Rank::FIVE, Card::Suit::CLUBS),     "5C"},
+          {Card(Card::Rank::SIX, Card::Suit::CLUBS),      "6C"},
+          {Card(Card::Rank::SEVEN, Card::Suit::CLUBS),    "7C"},
+          {Card(Card::Rank::EIGHT, Card::Suit::CLUBS),    "8C"},
+          {Card(Card::Rank::NINE, Card::Suit::CLUBS),     "9C"},
+          {Card(Card::Rank::TEN, Card::Suit::CLUBS),      "10C"},
+          {Card(Card::Rank::JACK, Card::Suit::CLUBS),     "JC"},
+          {Card(Card::Rank::QUEEN, Card::Suit::CLUBS),    "QC"},
+          {Card(Card::Rank::KING, Card::Suit::CLUBS),     "KC"},
+          {Card(Card::Rank::ACE, Card::Suit::DIAMONDS),   "AD"},
+          {Card(Card::Rank::TWO, Card::Suit::DIAMONDS),   "2D"},
+          {Card(Card::Rank::THREE, Card::Suit::DIAMONDS), "3D"},
+          {Card(Card::Rank::FOUR, Card::Suit::DIAMONDS),  "4D"},
+          {Card(Card::Rank::FIVE, Card::Suit::DIAMONDS),  "5D"},
+          {Card(Card::Rank::SIX, Card::Suit::DIAMONDS),   "6D"},
+          {Card(Card::Rank::SEVEN, Card::Suit::DIAMONDS), "7D"},
+          {Card(Card::Rank::EIGHT, Card::Suit::DIAMONDS), "8D"},
+          {Card(Card::Rank::NINE, Card::Suit::DIAMONDS),  "9D"},
+          {Card(Card::Rank::TEN, Card::Suit::DIAMONDS),   "10D"},
+          {Card(Card::Rank::JACK, Card::Suit::DIAMONDS),  "JD"},
+          {Card(Card::Rank::QUEEN, Card::Suit::DIAMONDS), "QD"},
+          {Card(Card::Rank::KING, Card::Suit::DIAMONDS),  "KD"},
+          {Card(Card::Rank::ACE, Card::Suit::HEARTS),     "AH"},
+          {Card(Card::Rank::TWO, Card::Suit::HEARTS),     "2H"},
+          {Card(Card::Rank::THREE, Card::Suit::HEARTS),   "3H"},
+          {Card(Card::Rank::FOUR, Card::Suit::HEARTS),    "4H"},
+          {Card(Card::Rank::FIVE, Card::Suit::HEARTS),    "5H"},
+          {Card(Card::Rank::SIX, Card::Suit::HEARTS),     "6H"},
+          {Card(Card::Rank::SEVEN, Card::Suit::HEARTS),   "7H"},
+          {Card(Card::Rank::EIGHT, Card::Suit::HEARTS),   "8H"},
+          {Card(Card::Rank::NINE, Card::Suit::HEARTS),    "9H"},
+          {Card(Card::Rank::TEN, Card::Suit::HEARTS),     "10H"},
+          {Card(Card::Rank::JACK, Card::Suit::HEARTS),    "JH"},
+          {Card(Card::Rank::QUEEN, Card::Suit::HEARTS),   "QH"},
+          {Card(Card::Rank::KING, Card::Suit::HEARTS),    "KH"},
+          {Card(Card::Rank::ACE, Card::Suit::SPADES),     "AS"},
+          {Card(Card::Rank::TWO, Card::Suit::SPADES),     "2S"},
+          {Card(Card::Rank::THREE, Card::Suit::SPADES),   "3S"},
+          {Card(Card::Rank::FOUR, Card::Suit::SPADES),    "4S"},
+          {Card(Card::Rank::FIVE, Card::Suit::SPADES),    "5S"},
+          {Card(Card::Rank::SIX, Card::Suit::SPADES),     "6S"},
+          {Card(Card::Rank::SEVEN, Card::Suit::SPADES),   "7S"},
+          {Card(Card::Rank::EIGHT, Card::Suit::SPADES),   "8S"},
+          {Card(Card::Rank::NINE, Card::Suit::SPADES),    "9S"},
+          {Card(Card::Rank::TEN, Card::Suit::SPADES),     "10S"},
+          {Card(Card::Rank::JACK, Card::Suit::SPADES),    "JS"},
+          {Card(Card::Rank::QUEEN, Card::Suit::SPADES),   "QS"},
+          {Card(Card::Rank::KING, Card::Suit::SPADES),    "KS"}},
+      deck{std::make_unique<Deck>()},
+      dealer{std::make_unique<Player>()},
+      player{std::make_unique<Player>()},
+      turnCount{0},
+      player_wins{0},
+      computer_wins{0}
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-
-    cardToImg = {
-                 {Card(Card::Rank::ACE, Card::Suit::CLUBS),      "AC"},
-                 {Card(Card::Rank::TWO, Card::Suit::CLUBS),      "2C"},
-                 {Card(Card::Rank::THREE, Card::Suit::CLUBS),    "3C"},
-                 {Card(Card::Rank::FOUR, Card::Suit::CLUBS),     "4C"},
-                 {Card(Card::Rank::FIVE, Card::Suit::CLUBS),     "5C"},
-                 {Card(Card::Rank::SIX, Card::Suit::CLUBS),      "6C"},
-                 {Card(Card::Rank::SEVEN, Card::Suit::CLUBS),    "7C"},
-                 {Card(Card::Rank::EIGHT, Card::Suit::CLUBS),    "8C"},
-                 {Card(Card::Rank::NINE, Card::Suit::CLUBS),     "9C"},
-                 {Card(Card::Rank::TEN, Card::Suit::CLUBS),      "10C"},
-                 {Card(Card::Rank::JACK, Card::Suit::CLUBS),     "JC"},
-                 {Card(Card::Rank::QUEEN, Card::Suit::CLUBS),    "QC"},
-                 {Card(Card::Rank::KING, Card::Suit::CLUBS),     "KC"},
-                 {Card(Card::Rank::ACE, Card::Suit::DIAMONDS),   "AD"},
-                 {Card(Card::Rank::TWO, Card::Suit::DIAMONDS),   "2D"},
-                 {Card(Card::Rank::THREE, Card::Suit::DIAMONDS), "3D"},
-                 {Card(Card::Rank::FOUR, Card::Suit::DIAMONDS),  "4D"},
-                 {Card(Card::Rank::FIVE, Card::Suit::DIAMONDS),  "5D"},
-                 {Card(Card::Rank::SIX, Card::Suit::DIAMONDS),   "6D"},
-                 {Card(Card::Rank::SEVEN, Card::Suit::DIAMONDS), "7D"},
-                 {Card(Card::Rank::EIGHT, Card::Suit::DIAMONDS), "8D"},
-                 {Card(Card::Rank::NINE, Card::Suit::DIAMONDS),  "9D"},
-                 {Card(Card::Rank::TEN, Card::Suit::DIAMONDS),   "10D"},
-                 {Card(Card::Rank::JACK, Card::Suit::DIAMONDS),  "JD"},
-                 {Card(Card::Rank::QUEEN, Card::Suit::DIAMONDS), "QD"},
-                 {Card(Card::Rank::KING, Card::Suit::DIAMONDS),  "KD"},
-                 {Card(Card::Rank::ACE, Card::Suit::HEARTS),     "AH"},
-                 {Card(Card::Rank::TWO, Card::Suit::HEARTS),     "2H"},
-                 {Card(Card::Rank::THREE, Card::Suit::HEARTS),   "3H"},
-                 {Card(Card::Rank::FOUR, Card::Suit::HEARTS),    "4H"},
-                 {Card(Card::Rank::FIVE, Card::Suit::HEARTS),    "5H"},
-                 {Card(Card::Rank::SIX, Card::Suit::HEARTS),     "6H"},
-                 {Card(Card::Rank::SEVEN, Card::Suit::HEARTS),   "7H"},
-                 {Card(Card::Rank::EIGHT, Card::Suit::HEARTS),   "8H"},
-                 {Card(Card::Rank::NINE, Card::Suit::HEARTS),    "9H"},
-                 {Card(Card::Rank::TEN, Card::Suit::HEARTS),     "10H"},
-                 {Card(Card::Rank::JACK, Card::Suit::HEARTS),    "JH"},
-                 {Card(Card::Rank::QUEEN, Card::Suit::HEARTS),   "QH"},
-                 {Card(Card::Rank::KING, Card::Suit::HEARTS),    "KH"},
-                 {Card(Card::Rank::ACE, Card::Suit::SPADES),     "AS"},
-                 {Card(Card::Rank::TWO, Card::Suit::SPADES),     "2S"},
-                 {Card(Card::Rank::THREE, Card::Suit::SPADES),   "3S"},
-                 {Card(Card::Rank::FOUR, Card::Suit::SPADES),    "4S"},
-                 {Card(Card::Rank::FIVE, Card::Suit::SPADES),    "5S"},
-                 {Card(Card::Rank::SIX, Card::Suit::SPADES),     "6S"},
-                 {Card(Card::Rank::SEVEN, Card::Suit::SPADES),   "7S"},
-                 {Card(Card::Rank::EIGHT, Card::Suit::SPADES),   "8S"},
-                 {Card(Card::Rank::NINE, Card::Suit::SPADES),    "9S"},
-                 {Card(Card::Rank::TEN, Card::Suit::SPADES),     "10S"},
-                 {Card(Card::Rank::JACK, Card::Suit::SPADES),    "JS"},
-                 {Card(Card::Rank::QUEEN, Card::Suit::SPADES),   "QS"},
-                 {Card(Card::Rank::KING, Card::Suit::SPADES),    "KS"}};
 
     darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
     darkPalette.setColor(QPalette::WindowText, Qt::white);
@@ -95,9 +100,8 @@ playWindow::playWindow(QWidget *parent) : QMainWindow(parent),
         ui->card10Label_2, ui->card9Label_2, ui->card8Label_2, ui->card7Label_2, ui->card6Label_2, ui->card5Label_2, ui->card4Label_2, ui->card3Label_2, ui->card2Label_2, ui->card1Label_2
     };
 
-    deck = std::make_unique<Deck>();
-    player = std::make_unique<Player>();
-    dealer = std::make_unique<Player>();
+    qApp->setStyle("Fusion");
+    qApp->setPalette(darkPalette);
 
     deck->shuffledeck();
 
@@ -111,17 +115,11 @@ playWindow::playWindow(QWidget *parent) : QMainWindow(parent),
                 ui->twistButton->setEnabled(false);
                 ui->stickButton->setEnabled(false);
 
-                       //Generating Computer score
+                //Generating Computer score
                 computerTurn();
             });
 
     connect(ui->playagainButton, &QPushButton::clicked, this, [=]{reset();});
-    qApp->setPalette(darkPalette);
-    qApp->setStyle("Fusion");
-
-    turnCount = 0;
-    player_wins = 0;
-    computer_wins = 0;
 }
 
 void playWindow::playerTurn(void)
