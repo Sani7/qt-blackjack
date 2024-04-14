@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
       , playwindow(new playWindow)
 {
     ui->setupUi(this);
+    this->setWindowState(Qt::WindowMaximized);
     connect(ui->playButton, &QPushButton::clicked, this, [=]{
         playwindow->show();
         this->hide();});
