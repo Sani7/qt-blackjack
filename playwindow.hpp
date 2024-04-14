@@ -45,6 +45,8 @@ public:
     int8_t calculate_winner(Player* player, Player* dealer);
 private:
     Ui::playWindow *ui;
+    QPalette standarPalette;
+    QPalette darkPalette;
 
     std::unordered_map<Card, QString> cardToImg;
     QList<QLabel*> countToPlayerLabel;
